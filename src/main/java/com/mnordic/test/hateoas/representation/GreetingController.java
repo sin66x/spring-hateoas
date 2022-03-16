@@ -12,15 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Locale;
+
 @RestController
 public class GreetingController {
 
     private static final String TEMPLATE = "Hello, %s!";
 
     @RequestMapping("/greeting")
-    public HttpEntity<Greeting> greeting(
+    public HttpEntity greeting(
             @RequestParam(value = "name", defaultValue = "World") String name) {
-
+        if("behnam".equals(name.toLowerCase())){
+            return (ResponseEntity.badRequest().body("Don't greet yourself!"));
+        }
         Greeting greeting = new Greeting(String.format(TEMPLATE, name));
         greeting.add(linkTo(methodOn(GreetingController.class).greeting(name)).withSelfRel());
         greeting.add(Link.of("http://www.google.com").withRel("Search"));
